@@ -38,13 +38,13 @@
   tasks:
     - name: Update DNS records
       shell: >
-        ./configure_namecheap_dns.sh "{{ domain }}" "{{ subdomain }}" "{{ instance_public_ip }}" "{{ namecheap_ddns_pass }}"
+        bash ./configure_namecheap_dns.sh "{{ domain }}" "{{ subdomain }}" "{{ instance_public_ip }}" "{{ namecheap_ddns_pass }}"
       args:
         chdir: "{{ playbook_dir }}"
 
     - name: Generate Hysteria configuration
       shell: >
-        ./write_hysteria_config.sh "{{ subdomain }}.{{ domain }}" "{{ email }}" "{{ masquerade_url }}" "{{ auth_password }}"
+        bash ./write_hysteria_config.sh "{{ subdomain }}.{{ domain }}" "{{ email }}" "{{ masquerade_url }}" "{{ auth_password }}"
       args:
         chdir: "{{ playbook_dir }}"
 

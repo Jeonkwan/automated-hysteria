@@ -7,5 +7,5 @@ services:
     network_mode: "host"
     volumes:
       - ./acme:/acme
-      - ./hysteria.yaml:/etc/hysteria.yaml
+      - ./hysteria_config.yaml:/etc/hysteria.yaml
     command: ["server", "-c", "/etc/hysteria.yaml"]
