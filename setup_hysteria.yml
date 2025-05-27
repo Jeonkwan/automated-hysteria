@@ -1,0 +1,58 @@
+---
+- name: Setup Hysteria Server
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  vars_prompt:
+    - name: domain
+      prompt: "Enter domain name (e.g., example.com)"
+      private: no
+
+    - name: subdomain
+      prompt: "Enter subdomain name"
+      private: no
+
+    - name: instance_public_ip
+      prompt: "Enter instance public IP"
+      private: no
+
+    - name: namecheap_ddns_pass
+      prompt: "Enter Namecheap Dynamic DNS password"
+      private: yes
+
+    - name: email
+      prompt: "Enter email for SSL certificate"
+      private: no
+
+    - name: masquerade_url
+      prompt: "Enter masquerade URL"
+      private: no
+
+    - name: auth_password
+      prompt: "Enter Hysteria auth password"
+      private: yes
+
+  vars:
+    wait_time: 600  # 10 minutes for DNS propagation
+
+  tasks:
+    - name: Update DNS records
+      shell: >
+        ./configure_namecheap_dns.sh "{{ domain }}" "{{ subdomain }}" "{{ instance_public_ip }}" "{{ namecheap_ddns_pass }}"
+      args:
+        chdir: "{{ playbook_dir }}"
+
+    - name: Generate Hysteria configuration
+      shell: >
+        ./write_hysteria_config.sh "{{ subdomain }}.{{ domain }}" "{{ email }}" "{{ masquerade_url }}" "{{ auth_password }}"
+      args:
+        chdir: "{{ playbook_dir }}"
+
+    - name: Wait for DNS propagation
+      pause:
+        seconds: "{{ wait_time }}"
+      
+    - name: Start Hysteria server
+      shell: docker compose up -d
+      args:
+        chdir: "{{ playbook_dir }}"

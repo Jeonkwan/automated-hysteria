@@ -1,0 +1,16 @@
+# listen: :443 
+
+acme:
+  domains:
+    - PLACEHOLDER_YOUR_DOMAIN
+  email: PLACEHOLDER_YOUR_EMAIL
+
+auth:
+  type: password
+  password: PLACEHOLDER_AUTH_PASSWORD 
+
+masquerade: 
+  type: proxy
+  proxy:
+    url: PLACEHOLDER_MASQUERADE_URL
+    rewriteHost: true
